@@ -9,8 +9,8 @@ const config = {
     projectId: "parangelmata",
     storageBucket: "parangelmata.appspot.com",
     messagingSenderId: "824823048409",
-    appId: "1:824823048409:web:4902e2715229ff2f3576c8",
-    measurementId: "G-0QKH2090T4"
+    appId: "1:824823048409:web:3e241472d3babc2c3576c8",
+    measurementId: "G-09Q8GHTRFZ"
 };
 
 firebase.initializeApp(config);

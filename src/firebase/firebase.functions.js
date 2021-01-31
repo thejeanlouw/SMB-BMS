@@ -1,32 +1,26 @@
 import firebase, {auth, firestore} from './firebase.utils'
 const getUuid = require('uuid-by-string')
 
-
 const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({
-    prompt: 'select_account'
-})
 
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
 
 export const getDeviceLink = async (deviceInfo) =>{
     if(!deviceInfo) return;
     const deviceId = getUuid(`${(deviceInfo.ua)}`);
-    debugger;
     const userDeviceRef = firestore.doc(`smb-devices/${deviceId}`);
     const deviceSnapshot = await userDeviceRef.get();
     if(deviceSnapshot.exists){
-        debugger;
         const dat = await deviceSnapshot.data();
         return {
             id: deviceId,
             data: dat,
             reg: userDeviceRef}
-    }
+    } else
     return {
         data: {
         id: 0,
-        linkAddress: 'https://blog.logrocket.com/react-hooks-with-firebase-firestore/',
+        linkAddress: 'https://thejeanlouw.github.io/super-media-bros',
         linkProperties: {}
         }
     };

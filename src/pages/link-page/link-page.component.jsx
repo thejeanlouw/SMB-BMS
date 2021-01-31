@@ -16,12 +16,11 @@ export default class LinkPage extends React.Component {
     componentDidMount= async () =>{
         const device = deviceDetect();
         const deviceData = await getDeviceLink(device);
-        this.setState({device: deviceData}, () => {debugger; console.log(this.state)});
+        this.setState({device: deviceData}, () => {console.log(this.state)});
     }
 
     render(){
         const {device} = this.state;
-        debugger;
         let linkAddress = '';
         if((device!=null) && (device.data!=null) && (device.data.linkAddress!=null)) {
             linkAddress = device.data.linkAddress;

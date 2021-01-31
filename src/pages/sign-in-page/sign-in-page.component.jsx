@@ -2,16 +2,13 @@ import React from 'react'
 import CustomButton from '../../components/custom-button/custom-button.component'
 import './sign-in-page.styles.scss'
 import {signInWithGoogle} from '../../firebase/firebase.functions'
-import {auth} from '../../firebase/firebase.utils'
 import {withRouter} from 'react-router-dom'
 
 class SignInPage extends React.Component {
 
     handleYes = async () =>{
-        const userRef = signInWithGoogle();
-        if(userRef){
-            this.props.history.push('/link-page')
-        }
+        signInWithGoogle().then((val)=>{console.log(val);this.props.history.push('/link-page');})
+        
     }
 
     handleNo = () => {

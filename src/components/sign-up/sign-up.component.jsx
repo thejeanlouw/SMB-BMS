@@ -27,7 +27,7 @@ export default class Signup extends React.Component {
             alert('Passwords don\'t match');
             return;
         }
-        debugger;
+        
         try{
             const {user} = await auth.createUserWithEmailAndPassword(email, password);
             createUserProfileDocument(user, {displayName});
