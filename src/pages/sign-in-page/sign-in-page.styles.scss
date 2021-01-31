@@ -1,0 +1,22 @@
+.sign-in-page{
+
+    width: 40vw;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    justify-content: center;
+    margin: auto;
+
+    .main-text{
+        font-size: 10vh;
+    }
+
+    .yes-or-no-buttons{
+        display: flex;
+        flex-direction: row;
+        align-content: space-between;
+    }
+
+}
+
