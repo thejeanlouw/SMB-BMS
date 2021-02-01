@@ -1,6 +1,4 @@
 import React from 'react'
-import IFrame from 'react-iframe'
-import {deviceDetect} from 'react-device-detect'
 import {getDeviceLink} from '../../firebase/firebase.functions'
 import './link-page.styles.scss'
 
@@ -13,10 +11,21 @@ export default class LinkPage extends React.Component {
         }
     }
 
+    getLinkFromFireStore = async () =>
+    {
+        const deviceData = await getDeviceLink(this.getChangeFromFireStore);
+        this.setState({device: deviceData});
+    }
+
+    getChangeFromFireStore = async (change) =>
+    {
+        this.setState({device: {
+            data: change.data(),
+            id: change.id}});
+    }
+
     componentDidMount= async () =>{
-        const device = deviceDetect();
-        const deviceData = await getDeviceLink(device);
-        this.setState({device: deviceData}, () => {console.log(this.state)});
+        this.getLinkFromFireStore();
     }
 
     render(){
@@ -24,11 +33,17 @@ export default class LinkPage extends React.Component {
         let linkAddress = '';
         if((device!=null) && (device.data!=null) && (device.data.linkAddress!=null)) {
             linkAddress = device.data.linkAddress;
+            console.log("link address: ", linkAddress, `${linkAddress}`)
             return (
                 <div className='iframe'>
-                    <IFrame className='frame' id={device.id} url={`${linkAddress}`} 
+                    <iframe className='frame' id={device.id} url={linkAddress} src={linkAddress}
+                    title=""
                     width="100%"
-                    height="100%"/> 
+                    height="100%"
+                    allowFullScreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    frameBorder="0"
+                    /> 
                 </div>
             );
         } else {

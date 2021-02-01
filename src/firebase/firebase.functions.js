@@ -1,21 +1,77 @@
 import firebase, {auth, firestore} from './firebase.utils'
-const getUuid = require('uuid-by-string')
+import device from '../data/static/device.data'
 
 const provider = new firebase.auth.GoogleAuthProvider();
 
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
 
-export const getDeviceLink = async (deviceInfo) =>{
-    if(!deviceInfo) return;
-    const deviceId = getUuid(`${(deviceInfo.ua)}`);
-    const userDeviceRef = firestore.doc(`smb-devices/${deviceId}`);
+export const addDeviceToUser = async () => {
+
+    const dev = await device();
+    const currentUser = auth.currentUser;
+    if(!currentUser) return;
+    if(dev==null || dev.ua == null) return;
+    
+    debugger;
+    const userDeviceRef = firestore.doc(`smb-devices/${dev.Uuid}`);
     const deviceSnapshot = await userDeviceRef.get();
+
+    const {email} = currentUser;
+    const ownerId = currentUser.uid;
+    const firstAccessedAt = new Date();
+    const lastAccessedAt = new Date(); 
+    const internalLink = false;
+    const linkAddress = 'https://www.parangelmata.com/plans-pricing';
+    const linkProperties = {};
+    debugger;
+    const deviceInfo = dev;
+
+    if(!deviceSnapshot.exists)
+    {
+        try {
+            await userDeviceRef.set({
+                email,
+                ownerId,
+                firstAccessedAt,
+                internalLink,
+                linkAddress,
+                linkProperties,
+                deviceInfo
+            });
+        } catch (error) {
+            console.log('ERROR CREATING DEVICE', error.message);
+        } 
+    } else {
+        try {
+            await userDeviceRef.update({
+                email,
+                ownerId,
+                lastAccessedAt,
+                deviceInfo
+            });
+        } catch (error) {
+            console.log('ERROR UPDATING DEVICE', error.message);
+        } 
+    }
+    return userDeviceRef; 
+}
+
+export const getDeviceLink = async (changeHandler) =>{
+    const dev = await device();
+    if(!dev.Uuid) return;
+    const userDeviceRef = firestore.doc(`smb-devices/${dev.Uuid}`);
+
+    const deviceSnapshot = await userDeviceRef.get();
+
     if(deviceSnapshot.exists){
+        if(changeHandler){
+            userDeviceRef.onSnapshot({includeMetadataChanges: true},changeHandler)
+        }
         const dat = await deviceSnapshot.data();
         return {
-            id: deviceId,
+            id: dev.Uuid,
             data: dat,
-            reg: userDeviceRef}
+            ref: userDeviceRef}
     } else
     return {
         data: {
@@ -25,6 +81,35 @@ export const getDeviceLink = async (deviceInfo) =>{
         }
     };
 }
+
+export const getUserDeviceList = async (changeHandler) => {
+    const currentUser = auth.currentUser;
+    const myAuth = auth;
+    debugger;
+    if(!currentUser) return null;
+    debugger;
+    const deviceListRef = firestore.collection('smb-devices').where('ownerId','==', currentUser.uid);
+    const snapShot = await deviceListRef.get();
+    const deviceList = [];
+    if(!snapShot.empty)
+    {
+        snapShot.docs.forEach((doc)=>{
+            deviceList.push({id:doc.id,uid:doc.uid,...doc.data()});
+        });
+        if(changeHandler)
+        {
+            deviceListRef.onSnapshot((change)=>{
+                const changeList = [];
+                change.docs.forEach((doc)=>{
+                    deviceList.push({id:doc.id,uid:doc.uid,...doc.data()});
+                });
+                changeHandler(changeList);
+            })
+        }
+    }
+    return deviceList;
+}
+
 
 export const createUserProfileDocument = async (userAuth, additionalData) => {
     if(!userAuth) return;                                           
@@ -51,37 +136,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
         }
     }
 
-    if(additionalData==null || 
-       additionalData.ua == null) return userRef;
-    const deviceId = getUuid(`${(additionalData.ua)}`);
-    
-    const userDeviceRef = firestore.doc(`smb-devices/${deviceId}`);
-    const deviceSnapshot = await userDeviceRef.get();
-    if(!deviceSnapshot.exists)
-    {
-        const {email} = userAuth;
-        const ownerId = userAuth.uid;
-        const firstAccessedAt = new Date();
-        const internalLink = false;
-        const linkAddress = 'https://www.parangelmata.com/plans-pricing';
-        const linkProperties = {};
-        const deviceInfo = additionalData;
-
-        try {
-            await userDeviceRef.set({
-                email,
-                ownerId,
-                firstAccessedAt,
-                internalLink,
-                linkAddress,
-                linkProperties,
-                deviceInfo
-            });
-        } catch (error) {
-            console.log('ERROR CREATING DEVICE', error.message);
-        } 
-    }
-
+    await addDeviceToUser();
     return userRef;
 
 }

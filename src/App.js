@@ -7,6 +7,7 @@ import { auth } from './firebase/firebase.utils'
 import { createUserProfileDocument } from './firebase/firebase.functions'
 import React from 'react'
 import LinkPage from './pages/link-page/link-page.component';
+import InfoPage from './pages/info-page/info-page.component';
 
 
 class App extends React.Component {
@@ -51,12 +52,14 @@ class App extends React.Component {
   render(){
   return (
     <div className="App">
+      <HashRouter>
       <Switch>
           <Route path='/sign-in' component={SignInPage} />
-          <Route path='/info-page' component={MainPage} />
+          <Route path='/info-page' component={InfoPage} />
           <Route path='/link-page' component={LinkPage}/>
           <Route path='/' component={MainPage} />
         </Switch>
+        </HashRouter>
     </div>
   );}
 }

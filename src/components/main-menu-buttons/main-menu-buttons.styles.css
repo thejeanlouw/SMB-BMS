@@ -1,6 +1,6 @@
 .main-menu-buttons {
-    width: 40vw;
-    height: 80vh;
+    width: 300px;
+    height: 400px;
     display: flex;
     flex-direction: column;
     align-self: center;

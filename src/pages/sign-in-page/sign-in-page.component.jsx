@@ -7,7 +7,10 @@ import {withRouter} from 'react-router-dom'
 class SignInPage extends React.Component {
 
     handleYes = async () =>{
-        signInWithGoogle().then((val)=>{console.log(val);this.props.history.push('/link-page');})
+        signInWithGoogle().then((val)=>{
+            if(val.user){
+                this.props.history.push('/info-page');
+            } else this.props.history.push('/link-page')})
         
     }
 
