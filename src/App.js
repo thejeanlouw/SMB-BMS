@@ -2,9 +2,8 @@ import './App.css';
 import MainPage from './pages/main-page/main-page.component'
 import SignInPage from './pages/sign-in-page/sign-in-page.component'
 import {HashRouter, Route, Switch} from 'react-router-dom'
-import {deviceDetect} from 'react-device-detect'
 import { auth } from './firebase/firebase.utils'
-import { createUserProfileDocument } from './firebase/firebase.functions'
+import { createUserProfileDocument, addDeviceToUser } from './firebase/firebase.functions'
 import React from 'react'
 import LinkPage from './pages/link-page/link-page.component';
 import InfoPage from './pages/info-page/info-page.component';
@@ -22,19 +21,18 @@ class App extends React.Component {
   }
 
   componentDidMount(){
-    const deviceInfo = deviceDetect();
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if(userAuth){
-        const userRef = await createUserProfileDocument(userAuth, deviceInfo);
         console.log("userAuth: ", userAuth);
+        const userRef = await createUserProfileDocument(userAuth);
+        const deviceRef = await addDeviceToUser();
         userRef.onSnapshot(snapShot => {
 
           this.setState({currentUser: 
             {
               id: snapShot.id,
-              ...snapShot.data
-            },
-            device: deviceInfo
+              ...snapShot.data()
+            }
           }
           ,()=>(console.log("currentUser: ",this.state.currentUser)));
         });
@@ -44,8 +42,9 @@ class App extends React.Component {
   }
   
   componentWillUnmount(){
-   // this.unsubscribeFromAuth();
-    //auth.signOut();
+    this.setState({currentUser: null})
+    this.unsubscribeFromAuth();
+    auth.signOut();
   }
 
 
@@ -53,13 +52,13 @@ class App extends React.Component {
   return (
     <div className="App">
       <HashRouter>
-      <Switch>
+        <Switch>
           <Route path='/signin' component={SignInPage} />
           <Route path='/info' component={InfoPage} />
           <Route path='/link' component={LinkPage}/>
           <Route path='/' component={MainPage} />
         </Switch>
-        </HashRouter>
+      </HashRouter>
     </div>
   );}
 }

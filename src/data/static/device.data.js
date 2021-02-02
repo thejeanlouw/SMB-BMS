@@ -4,23 +4,26 @@ import getUuid from 'uuid-by-string'
 
 const device = async (callback) => {
 
-
     var dev = await deviceDetect();
-
-    const geoUpdate = (upd) => {
-        dev.geolocation = upd;
-    }
-    
     var ua = getUA;
-    const battery = await window.navigator.getBattery();
-    dev.battery = {
-        isCharging: battery?.charging,
-        timeUntilCharged: battery?.chargingTime,
-        batteryLevel: battery?.level,
-        timeUntilEmpty: battery?.dischargingTime,
+    dev.ua = ua;
+    try{
+        const battery = await window.navigator.getBattery();
+
+        dev.battery = {
+            isCharging: battery?.charging,
+            timeUntilCharged: battery?.chargingTime,
+            batteryLevel: battery?.level,
+            timeUntilEmpty: battery?.dischargingTime,
+        }
+    } catch {
+        console.error('COULD NOT GET BATTERY INFO');
     }
-    dev.bluetooth = await window.navigator.bluetooth.getAvailability();
-    await window.navigator.geolocation.getCurrentPosition(geoUpdate);
+    try{
+        dev.bluetooth = await window.navigator.bluetooth.getAvailability();
+    } catch {
+        console.error('COULD NOT GET BLUETOOTH INFO');
+    }
     dev.Uuid = getUuid(ua);
     return {...dev,...rcc};
 }

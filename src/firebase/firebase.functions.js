@@ -6,8 +6,8 @@ const provider = new firebase.auth.GoogleAuthProvider();
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
 
 export const addDeviceToUser = async () => {
-
     const dev = await device();
+    if(dev.id) dev.Uuid=dev.id;
     const currentUser = auth.currentUser;
     if(!currentUser) return;
     if(dev==null || dev.ua == null) return;
@@ -79,10 +79,10 @@ export const updateDeviceDisplayName = async (deviceId, linkAddress) => {
 }
 
 export const getDeviceLink = async (changeHandler, deviceId) =>{
-    
     const dev = await device();
+    if(dev.id) dev.Uuid= dev.id;
     if(!dev.Uuid) return;
-    if(deviceId){
+    if(deviceId!=null){
         dev.Uuid=deviceId
     };
 
@@ -137,10 +137,9 @@ export const getUserDeviceList = async (changeHandler) => {
 
 
 export const createUserProfileDocument = async (userAuth, additionalData) => {
-    if(!userAuth) return;                                           
+    if(!userAuth) return;                 
     const userRef = firestore.doc(`smb-users/${userAuth.uid}`);
     const snapShot = await userRef.get();
-    
     if(!snapShot.exists){
         const { displayName, email, phoneNumber} = userAuth;
         const createdAt= new Date();
@@ -160,8 +159,5 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
             console.log('ERROR CREATING USER', error.message);
         }
     }
-
-    await addDeviceToUser();
     return userRef;
-
 }
