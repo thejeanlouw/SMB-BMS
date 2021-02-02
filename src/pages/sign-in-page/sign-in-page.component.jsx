@@ -9,13 +9,13 @@ class SignInPage extends React.Component {
     handleYes = async () =>{
         signInWithGoogle().then((val)=>{
             if(val.user){
-                this.props.history.push('/info-page');
-            } else this.props.history.push('/link-page')})
+                this.props.history.push('/info');
+            } else this.props.history.push('/link')})
         
     }
 
     handleNo = () => {
-        this.props.history.push('/link-page')
+        this.props.history.push('/link')
     }
 
     render(){

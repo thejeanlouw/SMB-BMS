@@ -15,8 +15,5 @@ export const DeviceDataHook = () => {
           snapshotListenOptions: { includeMetadataChanges: true },
         }
     );
-
-    
-    debugger;
     return refData;
 }

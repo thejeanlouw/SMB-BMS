@@ -44,8 +44,8 @@ class App extends React.Component {
   }
   
   componentWillUnmount(){
-    this.unsubscribeFromAuth();
-    auth.signOut();
+   // this.unsubscribeFromAuth();
+    //auth.signOut();
   }
 
 
@@ -54,9 +54,9 @@ class App extends React.Component {
     <div className="App">
       <HashRouter>
       <Switch>
-          <Route path='/sign-in' component={SignInPage} />
-          <Route path='/info-page' component={InfoPage} />
-          <Route path='/link-page' component={LinkPage}/>
+          <Route path='/signin' component={SignInPage} />
+          <Route path='/info' component={InfoPage} />
+          <Route path='/link' component={LinkPage}/>
           <Route path='/' component={MainPage} />
         </Switch>
         </HashRouter>

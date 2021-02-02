@@ -9,10 +9,10 @@ export default function MainMenuButtons() {
             <Link to='/'>
                 <CustomButton>Welcome</CustomButton>
             </Link>
-            <Link to='showcase'>
+            <Link to='link'>
                 <CustomButton>Showcase</CustomButton>
             </Link>
-            <Link to='sign-in'>
+            <Link to='signin'>
                 <CustomButton>Sign-In</CustomButton>
             </Link>
         </div>

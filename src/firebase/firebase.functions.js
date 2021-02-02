@@ -12,7 +12,6 @@ export const addDeviceToUser = async () => {
     if(!currentUser) return;
     if(dev==null || dev.ua == null) return;
     
-    debugger;
     const userDeviceRef = firestore.doc(`smb-devices/${dev.Uuid}`);
     const deviceSnapshot = await userDeviceRef.get();
 
@@ -23,7 +22,6 @@ export const addDeviceToUser = async () => {
     const internalLink = false;
     const linkAddress = 'https://www.parangelmata.com/plans-pricing';
     const linkProperties = {};
-    debugger;
     const deviceInfo = dev;
 
     if(!deviceSnapshot.exists)
@@ -56,9 +54,38 @@ export const addDeviceToUser = async () => {
     return userDeviceRef; 
 }
 
-export const getDeviceLink = async (changeHandler) =>{
+export const updateDeviceLinkAddress = async (deviceId, linkAddress) => {
+    if(!deviceId) return;
+    const userDeviceRef = firestore.doc(`smb-devices/${deviceId}`);
+    const deviceSnapshot = await userDeviceRef.get();
+
+    if(deviceSnapshot.exists){
+        userDeviceRef.update({
+            'linkAddress': linkAddress 
+        });
+    }
+}
+
+export const updateDeviceDisplayName = async (deviceId, linkAddress) => {
+    if(!deviceId) return;
+    const userDeviceRef = firestore.doc(`smb-devices/${deviceId}`);
+    const deviceSnapshot = await userDeviceRef.get();
+
+    if(deviceSnapshot.exists){
+        userDeviceRef.update({
+            'displayName': linkAddress 
+        });
+    }
+}
+
+export const getDeviceLink = async (changeHandler, deviceId) =>{
+    
     const dev = await device();
     if(!dev.Uuid) return;
+    if(deviceId){
+        dev.Uuid=deviceId
+    };
+
     const userDeviceRef = firestore.doc(`smb-devices/${dev.Uuid}`);
 
     const deviceSnapshot = await userDeviceRef.get();
@@ -85,9 +112,7 @@ export const getDeviceLink = async (changeHandler) =>{
 export const getUserDeviceList = async (changeHandler) => {
     const currentUser = auth.currentUser;
     const myAuth = auth;
-    debugger;
     if(!currentUser) return null;
-    debugger;
     const deviceListRef = firestore.collection('smb-devices').where('ownerId','==', currentUser.uid);
     const snapShot = await deviceListRef.get();
     const deviceList = [];
