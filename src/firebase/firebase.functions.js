@@ -20,7 +20,7 @@ export const addDeviceToUser = async () => {
     const firstAccessedAt = new Date();
     const lastAccessedAt = new Date(); 
     const internalLink = false;
-    const linkAddress = 'https://www.parangelmata.com/plans-pricing';
+    const linkAddress = 'https://thejeanlouw.github.io/super-media-bros';
     const linkProperties = {};
     const deviceInfo = dev;
 
