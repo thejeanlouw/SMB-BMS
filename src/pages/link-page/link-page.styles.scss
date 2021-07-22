@@ -1,0 +1,19 @@
+.iframe{
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    
+    /* Preserve aspet ratio */
+    min-width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-content: center;
+
+    .frame {
+        width: 100%;
+        min-height: 100vh;
+    }
+}

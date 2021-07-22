@@ -1,0 +1,64 @@
+
+.info-page{
+    position: fixed; 
+    top: 0; 
+    left: 0;     
+    overflow: scroll;
+    /* Preserve aspet ratio */
+    min-width: 100%;
+    min-height: 100%;
+
+    display: flex;
+    flex-direction: row;
+            min-width: 200px;
+    
+    .details{
+        min-height: 100%;
+        width: 100%;
+    }
+
+    .device-list{
+        display: flex;
+        flex-direction: column;
+        align-content: space-between;
+        background-color: #C7F4FF;
+        
+        .device-list-header{
+            font-weight: bolder;
+            font-size: 22px;
+            background-color: #3D4B7C;
+            color: white;
+            min-height: 40px;
+        }
+
+        
+
+        .link-page{
+            text-decoration: none;
+            font-weight: bolder;
+            font-size: 22px;
+            background-color: #DB562C;
+            color: white;
+            min-height: 40px;
+        }
+    }
+    
+}
+
+@media (min-width: 700px){
+
+    .info-page{
+        
+        overflow-y: none;
+
+        .device-list{
+            min-width: 200px;
+            min-height: 100%;
+
+            .all-devices{
+                min-height: auto;
+                height: 100%;
+            }
+        };
+    }
+}

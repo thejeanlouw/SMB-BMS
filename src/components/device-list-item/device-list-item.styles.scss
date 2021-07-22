@@ -1,0 +1,13 @@
+.device-list-item{
+    cursor: pointer;
+
+    .display-name{
+        font-weight: 200;
+        
+        &:hover{
+            font-weight: bolder;
+            color: #DB562C;
+        }
+    }
+
+}
